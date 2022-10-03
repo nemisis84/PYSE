@@ -1,0 +1,7 @@
+README.md
+setup.py
+src/PYSE_lab_tasks.egg-info/PKG-INFO
+src/PYSE_lab_tasks.egg-info/SOURCES.txt
+src/PYSE_lab_tasks.egg-info/dependency_links.txt
+src/PYSE_lab_tasks.egg-info/requires.txt
+src/PYSE_lab_tasks.egg-info/top_level.txt

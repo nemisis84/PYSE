@@ -1,0 +1,17 @@
+name: PYSE-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip 21.*
+  - setuptools>=41.6
+  - wheel>=0.33
+  - pip:
+      - pandas>=1.4.3
+      - numpy>=1.23.0
+      - plotly>=5.9.0.
+      - matplotlib>=3.5.2
+      - sympy == 1.11.1
+      - jupyterlab
+      - -e .
