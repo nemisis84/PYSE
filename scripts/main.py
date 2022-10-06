@@ -7,10 +7,11 @@ import pandas as pd
 
 class Employee:
 
-    def __init__(self, env, bins, threshold_value):
+    def __init__(self, env, bins, threshold_value, shelf_available):
         self.env = env
         self.bins = bins
         self.threshold_value = threshold_value
+        self.shelf_available = shelf_available
 
     def refill(self, env, id, refilling_time, moving_time_lambda):
 
@@ -22,19 +23,19 @@ class Employee:
                 items_in_shelf = self.bins[i].level
                 shelf_capacity = self.bins[i].capacity
 
-                if (items_in_shelf/shelf_capacity < self.threshold_value):
-
+                if (items_in_shelf/shelf_capacity < self.threshold_value) and self.shelf_available[i]:
+                    self.shelf_available[i] = False
                     self.bins[i].put(shelf_capacity-items_in_shelf)
                     yield env.timeout(refilling_time[i])
-
+                    self.shelf_available[i] = True
                     # print(f"Employee {id} refilled at {self.env.now:.2f}!")
 
 
-def generator_employeers(env, number_of_employees, bins, threshold_value, refilling_time, moving_time_lambda):
+def generator_employeers(env, number_of_employees, bins, threshold_value, refilling_time, moving_time_lambda, shelf_available):
     id = 0
     while (id < number_of_employees):
         # Create the employee
-        new_employee = Employee(env, bins, threshold_value)
+        new_employee = Employee(env, bins, threshold_value, shelf_available)
         # Have the environment employee
         env.process(new_employee.refill(
             env, id, refilling_time, moving_time_lambda))
@@ -129,6 +130,7 @@ def run_sim(number_of_employees, custumer_interval_lambda, moving_time_lambda, s
     threshold_value = number_of_employees*0.05
     env = simpy.Environment()
     bins = []
+    shelf_available = [True]*7
     for i in range(len(N)):
         bins.append(simpy.Container(env, init=N[i], capacity=N[i]))
     checkout = simpy.Resource(env, capacity=4)
@@ -136,7 +138,7 @@ def run_sim(number_of_employees, custumer_interval_lambda, moving_time_lambda, s
                                     time_to_pick_item, bins, checkout, MOS_scores, moving_time_lambda, scanning_time, paying_time))
 
     env.process(generator_employeers(
-        env, number_of_employees, bins, threshold_value, refilling_time, moving_time_lambda))
+        env, number_of_employees, bins, threshold_value, refilling_time, moving_time_lambda, shelf_available))
 
     env.run(until=16*60)
     return MOS_scores
