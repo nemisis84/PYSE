@@ -28,7 +28,7 @@ class Employee:
                     self.shelf_available[i] = True
 
 
-def generator_employeers(env, number_of_employees, bins, threshold_value, refilling_time, moving_time_lambda, shelf_available):
+def generator_employees(env, number_of_employees, bins, threshold_value, refilling_time, moving_time_lambda, shelf_available):
     id = 0
     while (id < number_of_employees):
         # Create the employee
@@ -40,7 +40,7 @@ def generator_employeers(env, number_of_employees, bins, threshold_value, refill
         id += 1
 
 
-class Custumer:
+class Customer:
 
     def __init__(self, env, bins, checkout, MOS_scores):
         self.env = env
@@ -71,7 +71,7 @@ class Custumer:
 
         return 1
 
-    def custumer_shopping(self, env, id, moving_time_lambda, scanning_time, paying_time, time_to_pick_item):
+    def customer_shopping(self, env, id, moving_time_lambda, scanning_time, paying_time, time_to_pick_item):
         for i in range(7):
             # Move to the next station
             yield env.timeout(neg_exp(moving_time_lambda))
@@ -102,14 +102,14 @@ class Custumer:
             sum(self.shopping_list[1:]), self.items_bought, queue_time))
 
 
-def generator_custumers(env, custumer_interval_lambda, time_to_pick_item, bins, checkout, MOS_scores, moving_time_lambda, scanning_time, paying_time):
+def generator_customers(env, customer_interval_lambda, time_to_pick_item, bins, checkout, MOS_scores, moving_time_lambda, scanning_time, paying_time):
     id = 0
     while True:
 
-        new_custumer = Custumer(env, bins, checkout, MOS_scores)
-        env.process(new_custumer.custumer_shopping(
+        new_customer = Customer(env, bins, checkout, MOS_scores)
+        env.process(new_customer.customer_shopping(
             env, id, moving_time_lambda, scanning_time, paying_time, time_to_pick_item))
-        yield env.timeout(neg_exp(custumer_interval_lambda))
+        yield env.timeout(neg_exp(customer_interval_lambda))
         id += 1
 
 
@@ -117,7 +117,7 @@ def neg_exp(lam):
     return np.random.exponential(1/lam)
 
 
-def run_sim(number_of_employees, custumer_interval_lambda, moving_time_lambda, scanning_time, paying_time, time_to_pick_item, N, refilling_time):
+def run_sim(number_of_employees, customer_interval_lambda, moving_time_lambda, scanning_time, paying_time, time_to_pick_item, N, refilling_time):
     MOS_scores = []
     threshold_value = number_of_employees*0.05
     env = simpy.Environment()
@@ -127,10 +127,10 @@ def run_sim(number_of_employees, custumer_interval_lambda, moving_time_lambda, s
     for i in range(len(N)):
         bins.append(simpy.Container(env, init=N[i], capacity=N[i]))
     checkout = simpy.Resource(env, capacity=4)
-    env.process(generator_custumers(env, custumer_interval_lambda,
+    env.process(generator_customers(env, customer_interval_lambda,
                                     time_to_pick_item, bins, checkout, MOS_scores, moving_time_lambda, scanning_time, paying_time))
 
-    env.process(generator_employeers(
+    env.process(generator_employees(
         env, number_of_employees, bins, threshold_value, refilling_time, moving_time_lambda, shelf_available))
 
     env.run(until=16*60)
@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
     # Run main.py as a script by entering python.py. The results and plots are run in plotting.ipynb
 
-    custumer_interval_lambda = 1/3
+    customer_interval_lambda = 1/3
     moving_time_lambda = 2
     scanning_time = 0.1
     paying_time = 0.2
@@ -155,7 +155,7 @@ if __name__ == "__main__":
     results = np.zeros((simulations, employeers_range))
     for n_employyers in range(1, employeers_range+1):
         for i in range(simulations):
-            sim = np.array(run_sim(n_employyers, custumer_interval_lambda, moving_time_lambda,
+            sim = np.array(run_sim(n_employyers, customer_interval_lambda, moving_time_lambda,
                                    scanning_time, paying_time, time_to_pick_item, N, refilling_time))
             results[i][n_employyers-1] = sim.mean()
 
