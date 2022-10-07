@@ -17,12 +17,7 @@ setup(
     version=version,
     description="PYSE",
     long_description=LONG_DESCRIPTION,
-    author="S&S",
-    author_email="simen.myrrusten@gmail.com",
     url="https://github.com/nemisis84/PYSE",
-    package_dir={"": "src"},
-    include_package_data=False,
-    packages=find_packages("src"),
     install_requires=['sympy', 'numpy'],
     python_requires=">=3.10"
 )

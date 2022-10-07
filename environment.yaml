@@ -4,14 +4,14 @@ channels:
   - defaults
 dependencies:
   - python>=3.10
-  - pip 21.*
+  - pip 22.*
   - setuptools>=41.6
   - wheel>=0.33
   - pip:
-      - pandas>=1.4.3
+      - pandas >=1.4.3
       - numpy>=1.23.0
-      - plotly>=5.9.0.
-      - matplotlib>=3.5.2
-      - simpy == 4.0.1
+      - plotly >=5.9.0.
+      - matplotlib >=3.5.2
+      - simpy >= 4.0.1
       - jupyterlab
       - -e .
