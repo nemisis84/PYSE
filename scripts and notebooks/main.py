@@ -23,8 +23,8 @@ class Employee:
                 if (items_in_shelf/shelf_capacity < threshold_value) and self.shelf_available[i]:
 
                     self.shelf_available[i] = False
-                    self.bins[i].put(shelf_capacity-items_in_shelf)
                     yield env.timeout(refilling_time[i])
+                    self.bins[i].put(shelf_capacity-items_in_shelf)
                     self.shelf_available[i] = True
 
 
@@ -79,11 +79,13 @@ class Customer:
             items = self.shopping_list[i]
             if items <= self.bins[i].level and items != 0:
 
-                self.bins[i].get(items)
                 if i == 0:
                     self.pant_note = 1  # pant
                 else:
                     self.items_bought += items
+
+                self.bins[i].get(items)
+
                 grabbing_time = time_to_pick_item[i]*items
                 yield env.timeout(grabbing_time)
 
