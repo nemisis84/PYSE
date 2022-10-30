@@ -141,7 +141,8 @@ def run_sim(number_of_employees, customer_interval_lambda, moving_time_lambda, s
 
 if __name__ == "__main__":
 
-    # Run main.py as a script by entering python.py. The results and plots are run in plotting.ipynb
+    # Run main.py as a script by entering python main.py. This should be done to explore/test the code.
+    # The results and plots used in the report are run in plotting.ipynb
 
     customer_interval_lambda = 1/3
     moving_time_lambda = 2
@@ -151,8 +152,8 @@ if __name__ == "__main__":
     N = np.array([100, 150, 50, 150, 80, 40, 250])
     refilling_time = np.array([60, 36, 42, 42, 30, 60, 90])
 
-    employeers_range = 10
-    simulations = 3
+    employeers_range = 15
+    simulations = 30
 
     results = np.zeros((simulations, employeers_range))
     for n_employyers in range(1, employeers_range+1):
