@@ -53,24 +53,19 @@ if __name__ == "__main__":
     N = np.array([100, 150, 50, 150, 80, 40, 250])
     U = np.array([60, 36, 42, 42, 30, 60, 90])
     stations = 7
-    max_employees = 15
-    MOS_table = np.zeros((stations, max_employees))
+    employees = 1
+    p_i = 0.05*employees
 
-    for employees in range(1, max_employees+1):
-        p_i = 0.05*employees
+    a = [lam/(p_i*n-2) for n in N]
+    b = [lam/(n-p_i*n) for n in N]
+    c = [1/u*employees for u in U]
 
-        a = [lam/(p_i*n-2) for n in N]
-        b = [lam/(n-p_i*n) for n in N]
-        c = [1/u*employees for u in U]
+    special_case = np.zeros(stations)
 
-        special_case = np.zeros(stations)
+    for i in range(stations):
+        if p_i*N[i] < 3:
+            special_case[i] = 1
 
-        for i in range(stations):
-            if p_i*N[i] < 3:
-                special_case[i] = 1
-
-        df, MOS_scores = calculate_results(
-            a, b, c, stations, employees, special_case)
-        MOS_table[:, employees-1] = MOS_scores
-    df1 = pd.DataFrame(MOS_table, columns=range(1, 16))
-    print(df1)
+    df, MOS_scores = calculate_results(
+        a, b, c, stations, employees, special_case)
+    print(df)
