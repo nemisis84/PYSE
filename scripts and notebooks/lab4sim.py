@@ -136,12 +136,3 @@ if __name__ == "__main__":
         counters_working_when_custumer_arrives_list))
     A_list = np.hstack(np.array(A_list))
     print(f'Results:\nAvailability A = {A_list.mean()}\nA std = {A_list.std()}\nMean queue time T_q = {queue_times_list.mean()}\nQueue time std={queue_times_list.std()}\nMean counters available when in front of line = {counters_working_when_custumer_arrives_list.mean()}\Counters available when in front of line std = {counters_working_when_custumer_arrives_list.std()}')
-
-    # queue_times = np.array(queue_times)
-    # counters_working_when_custumer_arrives = np.array(
-    #     counters_working_when_custumer_arrives)
-
-    # up_time = 16*60-down_time
-    # A = availability(up_time, down_time)
-
-    # print(f'Results:\nAvailability A = {A}\nMean queue time T_q = {queue_times.mean()}\nNumber of custumers = {len(queue_times)}\nMean counters available when in front of line = {counters_working_when_custumer_arrives.mean()}')
