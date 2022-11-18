@@ -33,7 +33,7 @@ class Counter:
     def simulate_failure(self, repair_time_lam):
         timestamp = False
 
-        req = self.checkout.request()
+        req = self.checkout.PriorityRequest(priority=0)
         yield req
 
         global counters_working
